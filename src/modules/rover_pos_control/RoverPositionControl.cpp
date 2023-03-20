@@ -137,12 +137,14 @@ RoverPositionControl::manual_control_setpoint_poll()
 
 					} else {
 						const float yaw_rate = math::radians(_param_gnd_man_y_max.get());
-						_att_sp.yaw_sp_move_rate = _manual_control_setpoint.roll * yaw_rate;
+						_att_sp.yaw_sp_move_rate = _manual_control_setpoint.yaw * yaw_rate;
 						_manual_yaw_sp = wrap_pi(_manual_yaw_sp + _att_sp.yaw_sp_move_rate * dt);
 					}
 
 					_att_sp.yaw_body = _manual_yaw_sp;
 					_att_sp.thrust_body[0] = _manual_control_setpoint.throttle;
+					//_att_sp.thrust_body[0] = (_manual_control_setpoint.throttle + 1.f) * .5f;	<<<<<<<<<<<
+					_att_sp.thrust_body[1] = _manual_control_setpoint.roll; // omni
 
 					Quatf q(Eulerf(_att_sp.roll_body, _att_sp.pitch_body, _att_sp.yaw_body));
 					q.copyTo(_att_sp.q_d);
@@ -156,8 +158,9 @@ RoverPositionControl::manual_control_setpoint_poll()
 					// STABILIZED mode generate the attitude setpoint from manual user inputs
 					_rates_sp.roll = 0.0;
 					_rates_sp.pitch = 0.0;
-					_rates_sp.yaw = _manual_control_setpoint.roll;
+					_rates_sp.yaw = _manual_control_setpoint.yaw;
 					_rates_sp.thrust_body[0] = _manual_control_setpoint.throttle;
+					_rates_sp.thrust_body[1] = _manual_control_setpoint.roll; // omni
 
 					_rates_sp.timestamp = hrt_absolute_time();
 
@@ -165,9 +168,10 @@ RoverPositionControl::manual_control_setpoint_poll()
 
 				} else {
 					// Set heading from the manual roll input channel
-					_yaw_control = _manual_control_setpoint.roll; // Nominally yaw: _manual_control_setpoint.yaw;
+					_yaw_control = _manual_control_setpoint.yaw; // Nominally yaw: _manual_control_setpoint.yaw;
 					// Set throttle from the manual throttle channel
 					_throttle_control = _manual_control_setpoint.throttle;
+					_translation_control = _manual_control_setpoint.roll;
 					_reset_yaw_sp = true;
 				}
 
@@ -543,10 +547,12 @@ RoverPositionControl::Run()
 		    _control_mode.flag_control_position_enabled ||
 		    _control_mode.flag_control_manual_enabled) {
 
+
+
 			vehicle_thrust_setpoint_s v_thrust_sp{};
 			v_thrust_sp.timestamp = hrt_absolute_time();
 			v_thrust_sp.xyz[0] = _throttle_control;
-			v_thrust_sp.xyz[1] = 0.0f;
+			v_thrust_sp.xyz[1] = _translation_control;
 			v_thrust_sp.xyz[2] = 0.0f;
 			_vehicle_thrust_setpoint_pub.publish(v_thrust_sp);
 
