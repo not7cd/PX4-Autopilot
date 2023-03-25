@@ -47,6 +47,8 @@ px4_add_romfs_files(
 	1019_gazebo-classic_iris_dual_gps
 	1021_gazebo-classic_uuv_hippocampus
 	1022_gazebo-classic_uuv_bluerov2_heavy
+	1023_gazebo-classic_usv_sese_omni
+	1024_gazebo-classic_usv_sese_rover
 	1030_gazebo-classic_plane
 	1031_gazebo-classic_plane_cam
 	1032_gazebo-classic_plane_catapult
