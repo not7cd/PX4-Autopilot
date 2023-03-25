@@ -16,10 +16,8 @@
 # @board bitcraze_crazyflie exclude
 #
 
-. ${R}etc/init.d/rc.rover_defaults
+. ${R}etc/init.d/rc.usv_defaults
 
-# we smol
-param set-default NAV_ACC_RAD 0.5
 
 # disable circuit breaker for airspeed sensor
 param set-default CBRK_AIRSPD_CHK 162128
@@ -36,7 +34,6 @@ param set-default BAT1_CAPACITY 18000
 param set-default BAT1_V_DIV 11.0
 param set-default BAT1_N_CELLS 4
 param set-default BAT_V_OFFS_CURR 0.33
-
 
 param set-default CA_AIRFRAME 7
 
