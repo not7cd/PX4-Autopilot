@@ -114,6 +114,7 @@ RoverPositionControl::vehicle_control_mode_poll()
 	}
 }
 
+
 void
 RoverPositionControl::manual_control_setpoint_poll()
 {
