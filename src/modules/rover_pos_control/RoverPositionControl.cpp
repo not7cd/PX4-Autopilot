@@ -428,12 +428,12 @@ RoverPositionControl::control_rates(const vehicle_angular_velocity_s &rates, con
 					lock_integrator);
 
 	_steering_input = math::constrain(_steering_input + torque(2), -1.0f, 1.0f);
-
-	_act_controls.control[actuator_controls_s::INDEX_YAW] = _steering_input;
+	_yaw_control = _steering_input;		//	<--
+	//_act_controls.control[actuator_controls_s::INDEX_YAW] = _steering_input;
 
 	const float control_throttle = rates_sp.thrust_body[0];
-
-	_act_controls.control[actuator_controls_s::INDEX_THROTTLE] =  math::constrain(control_throttle, 0.0f, 1.0f);
+	_throttle_control = math::constrain(control_throttle, 0.0f, 1.0f);	// <--
+	//_act_controls.control[actuator_controls_s::INDEX_THROTTLE] =  math::constrain(control_throttle, 0.0f, 1.0f);
 }
 
 
